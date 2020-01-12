@@ -95,6 +95,7 @@ let responseParse = res => {
                 bgImage.style.backgroundImage = 'url(./assets/img/default.jpg)';
                 break;
         }
+        setTime();
         preloaderSection.classList.remove('active');
     }
 };
@@ -116,6 +117,3 @@ let setTime = () => {
     date.textContent = `${day}.${month}.${currentlyDate.getFullYear()}`;
 };
 
-setTime();
-
-setInterval(setTime, 10000);
