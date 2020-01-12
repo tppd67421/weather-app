@@ -2,6 +2,7 @@ import 'babel-polyfill';
 
 const BROWSER_LANGUAGE = navigator.language || navigator.userLanguage;
 const USER_LANGUAGE = 'user_language';
+const CELSIUS_DEGREES = '°';
 
 if (localStorage.getItem(USER_LANGUAGE) === null && localStorage.getItem(USER_LANGUAGE) !== BROWSER_LANGUAGE) {
     localStorage.setItem(USER_LANGUAGE, BROWSER_LANGUAGE.slice(0, 2));
@@ -32,10 +33,11 @@ let query = async (lat, lon) => {
         const ipInfo = await fetch('https://api.sypexgeo.net/json');
         const ipInfoJson = await ipInfo.json();
 
-        const weather = await fetch(`https://yacdn.org/proxy/https://api.darksky.net/forecast/23927c2ea3d64eff20642e6125e3bc20/${lat ? lat : ipInfoJson.city.lat},${lon ? lon : ipInfoJson.city.lon}?lang=${localStorage.getItem(USER_LANGUAGE)}`)
+        const weather = await fetch(`https://api.allorigins.win/get?url=https://api.darksky.net/forecast/23927c2ea3d64eff20642e6125e3bc20/${lat ? lat : ipInfoJson.city.lat},${lon ? lon : ipInfoJson.city.lon}?lang=${localStorage.getItem(USER_LANGUAGE)}`)
         const weatherJson = await weather.json();
+        const weatherJsonParsed = await JSON.parse(weatherJson.contents);
 
-        return { ipInfoJson, weatherJson };
+        return { ipInfoJson, weatherJsonParsed };
     } catch (error) {
         console.log('Error: ', error)
     }
@@ -54,11 +56,11 @@ navigator.geolocation.getCurrentPosition(success, error);
 
 let responseParse = res => {
     if (res) {
-        temperature.textContent = Math.trunc(res.weatherJson.currently.temperature - TEMPERATURE_DELTA);
-        descriptionText.textContent = res.weatherJson.currently.summary;
+        temperature.textContent = `${Math.trunc(res.weatherJsonParsed.currently.temperature - TEMPERATURE_DELTA)}${CELSIUS_DEGREES}`;
+        descriptionText.textContent = res.weatherJsonParsed.currently.summary;
         cityName.textContent = res.ipInfoJson.city[`name_${localStorage.getItem(USER_LANGUAGE)}`];
         countryName.textContent = res.ipInfoJson.country[`name_${localStorage.getItem(USER_LANGUAGE)}`];
-        switch (res.weatherJson.currently.icon) {
+        switch (res.weatherJsonParsed.currently.icon) {
             case 'clear-day':
                 bgImage.style.backgroundImage = 'url(./assets/img/clear-day.jpg)';
                 break;

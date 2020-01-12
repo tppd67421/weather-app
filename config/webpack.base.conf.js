@@ -14,10 +14,10 @@ const PAGES_DIR = PATHS.src
 const PAGES = fs.readdirSync(PAGES_DIR).filter(fileName => fileName.endsWith('.html'))
 
 module.exports = {
-  watchOptions: {
-    aggregateTimeout: 2000,
-    poll: 2000
-  },
+  // watchOptions: {
+  //   aggregateTimeout: 2000,
+  //   poll: 2000
+  // },
   externals: {
     paths: PATHS
   },
