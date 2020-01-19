@@ -118,8 +118,8 @@ let setTime = () => {
 };
 
 
-const citySearch = document.querySelector('.gamburger-menu .menu .menu__search .input');
-const dropdownList = document.querySelector('.gamburger-menu .menu__search .dropdown-list');
+const citySearch = document.querySelector('.gamburger-menu .search__input');
+const dropdownList = document.querySelector('.gamburger-menu .search__dropdown-list');
 let inputTimer;
 let citySearchResult;
 
@@ -127,12 +127,12 @@ citySearch.addEventListener('input', e => {
     clearTimeout(inputTimer);
     inputTimer = setTimeout(() => {
         fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${e.target.value}`)
-        .then(res => res.json())
-        .then(res => parseCitySearch(res));
+            .then(res => res.json())
+            .then(res => parseCitySearch(res));
     }, 1000);
 })
 
-let parseCitySearch = res => {    
+let parseCitySearch = res => {
     dropdownList.querySelectorAll('li').forEach(item => {
         item.remove();
     })
@@ -163,5 +163,47 @@ window.addEventListener('click', e => {
         default:
             dropdownList.classList.remove('active');
             break;
-    }    
+    }
 })
+
+
+const daySwitch = document.querySelector('.gamburger-menu .header .slider-button__day');
+const hoursSwitch = document.querySelector('.gamburger-menu .header .slider-button__hours');
+const slider = document.querySelector('.gamburger-menu .slider');
+const slideDay = document.querySelector('.gamburger-menu .slider .day');
+const slideHours = document.querySelector('.gamburger-menu .slider .hours');
+
+daySwitch.addEventListener('click', () => {
+    slider.classList.remove('shift');
+})
+
+hoursSwitch.addEventListener('click', () => {
+    slider.classList.add('shift');
+})
+
+let dragAndDropSlideDay = item => {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    item.addEventListener('mousedown', e => {
+            isDown = true;
+            item.style.cursor = 'grabbing';
+            startX = e.pageX - item.offsetLeft;
+            scrollLeft = item.scrollLeft;
+    });
+    item.addEventListener('mouseup', e => {
+            isDown = false;
+            item.style.cursor = 'default';
+    });
+    item.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - item.offsetLeft;
+            const walk = (x - startX) * 2;
+            item.scrollLeft = scrollLeft - walk;
+    });
+}
+
+dragAndDropSlideDay(slideDay);
+dragAndDropSlideDay(slideHours);
