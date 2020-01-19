@@ -12,7 +12,6 @@
     .gamburger-menu {
         display: flex;
         position: relative;
-        // right: -400px;
         width: 100%;
         justify-content: flex-end;
         .button {
@@ -42,14 +41,17 @@
             width: 400px;
             background-color: #ccc;
             height: 100%;
-            &__search {
+            overflow-y: scroll;
+            .search {
                 position: relative;
-                .input {
+                &__input {
                     width: 100%;
                 }
-                .dropdown-list {
+                &__dropdown-list {
                     position: absolute;
                     display: none;
+                    background-color: #fff;
+                    z-index: 3;
                     &.active {
                         display: block;
                     }

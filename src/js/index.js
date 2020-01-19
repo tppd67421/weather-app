@@ -11,6 +11,8 @@ if (localStorage.getItem(USER_LANGUAGE) === null && localStorage.getItem(USER_LA
 const WELCOME_INSPIRATION_EN = 'Whats the weather?';
 const WELCOME_INSPIRATION_RU = 'Какая сейчас погода?';
 
+const KILOMETRES_PER_HOUR = 1.6;
+
 const preloaderSection = document.querySelector('.preloader-wrap');
 const preloaderTitle = document.querySelector('.preloader__title');
 
@@ -21,6 +23,9 @@ localStorage.getItem(USER_LANGUAGE) === 'en'
 const bgImage = document.querySelector('.wrap');
 const temperature = document.querySelector('.description__temperature');
 const descriptionText = document.querySelector('.description__text');
+const cloudy = document.querySelector('.gamburger-menu .details .cloudy__value');
+const humidity = document.querySelector('.gamburger-menu .details .humidity__value');
+const windSpeed = document.querySelector('.gamburger-menu .details .wind-speed__value');
 const cityName = document.querySelector('.city__name_city');
 const countryName = document.querySelector('.city__name_country');
 const time = document.querySelector('.time');
@@ -58,6 +63,10 @@ let responseParse = res => {
     if (res) {
         temperature.textContent = `${Math.trunc(res.weatherJsonParsed.currently.temperature - TEMPERATURE_DELTA)}${CELSIUS_DEGREES}`;
         descriptionText.textContent = res.weatherJsonParsed.currently.summary;
+        cloudy.textContent = `${res.weatherJsonParsed.currently.cloudCover * 100}%`;
+        humidity.textContent = `${res.weatherJsonParsed.currently.humidity * 100}%`;
+        // round number
+        windSpeed.textContent = `${Math.floor(res.weatherJsonParsed.currently.windSpeed * KILOMETRES_PER_HOUR * 10) / 10}km/h`;
         cityName.textContent = res.ipInfoJson.city[`name_${localStorage.getItem(USER_LANGUAGE)}`];
         countryName.textContent = res.ipInfoJson.country[`name_${localStorage.getItem(USER_LANGUAGE)}`];
         switch (res.weatherJsonParsed.currently.icon) {
