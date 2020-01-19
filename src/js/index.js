@@ -117,3 +117,51 @@ let setTime = () => {
     date.textContent = `${day}.${month}.${currentlyDate.getFullYear()}`;
 };
 
+
+const citySearch = document.querySelector('.gamburger-menu .menu .menu__search .input');
+const dropdownList = document.querySelector('.gamburger-menu .menu__search .dropdown-list');
+let inputTimer;
+let citySearchResult;
+
+citySearch.addEventListener('input', e => {
+    clearTimeout(inputTimer);
+    inputTimer = setTimeout(() => {
+        fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${e.target.value}`)
+        .then(res => res.json())
+        .then(res => parseCitySearch(res));
+    }, 1000);
+})
+
+let parseCitySearch = res => {    
+    dropdownList.querySelectorAll('li').forEach(item => {
+        item.remove();
+    })
+    res.results.forEach(item => {
+        let element = document.createElement('li');
+        element.classList.add('dropdown-list__item');
+        element.setAttribute('data-value', item.formatted);
+        element.setAttribute('data-lat', item.geometry.lat);
+        element.setAttribute('data-lng', item.geometry.lng);
+        element.textContent = item.formatted;
+        dropdownList.append(element);
+
+        element.addEventListener('click', () => {
+            citySearch.value = element.getAttribute('data-value');
+            query(element.getAttribute('data-lat'), element.getAttribute('data-lng')).then(res => responseParse(res));
+        })
+    })
+}
+
+window.addEventListener('click', e => {
+    switch (e.target.getAttribute('id')) {
+        case 'menu-search-input':
+            dropdownList.classList.add('active');
+            break;
+        case 'dropdown-list':
+            dropdownList.classList.remove('active');
+            break;
+        default:
+            dropdownList.classList.remove('active');
+            break;
+    }    
+})
