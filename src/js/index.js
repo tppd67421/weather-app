@@ -13,6 +13,10 @@ const WELCOME_INSPIRATION_RU = 'Какая сейчас погода?';
 
 const KILOMETRES_PER_HOUR = 1.6;
 
+const DAYS_OF_THE_WEEK = [
+    'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'
+];
+
 const preloaderSection = document.querySelector('.preloader-wrap');
 const preloaderTitle = document.querySelector('.preloader__title');
 
@@ -26,6 +30,8 @@ const descriptionText = document.querySelector('.description__text');
 const cloudy = document.querySelector('.gamburger-menu .details .cloudy__value');
 const humidity = document.querySelector('.gamburger-menu .details .humidity__value');
 const windSpeed = document.querySelector('.gamburger-menu .details .wind-speed__value');
+const dayTemperature = document.querySelector('.gamburger-menu .slider .day');
+const hoursTemperature = document.querySelector('.gamburger-menu .slider .hours');
 const cityName = document.querySelector('.city__name_city');
 const countryName = document.querySelector('.city__name_country');
 const time = document.querySelector('.time');
@@ -67,6 +73,41 @@ let responseParse = res => {
         humidity.textContent = `${res.weatherJsonParsed.currently.humidity * 100}%`;
         // round number
         windSpeed.textContent = `${Math.floor(res.weatherJsonParsed.currently.windSpeed * KILOMETRES_PER_HOUR * 10) / 10}km/h`;
+        // set daily weather
+        res.weatherJsonParsed.daily.data.reduce((acc, item) => {
+            if (new Date().getDay() < new Date(item.time * 1000).getDay() || acc !== 0) {
+                let element = `
+                    <li class="day__item">
+                        <div class="day__day-week">${DAYS_OF_THE_WEEK[new Date(item.time * 1000).getDay()]}</div>
+                        <div class="day__icon">icon</div>
+                        <div class="day__temperature">${Math.round(((item.temperatureHigh + item.temperatureLow) / 2) - TEMPERATURE_DELTA)}${CELSIUS_DEGREES}</div>
+                    </li>`;
+
+                dayTemperature.insertAdjacentHTML('beforeend', element);
+
+                return ++acc;
+            } else {
+                return acc;
+            }
+        }, 0);
+        res.weatherJsonParsed.hourly.data.reduce((acc, item) => {
+            let targetDate = new Date(item.time * 1000).getHours();
+            if ((new Date().getHours() < targetDate || acc !== 0) && acc < 24) {
+                let element = `
+                    <li class="hours__item">
+                        <div class="hours__hour">${targetDate < 10 ? '0' + targetDate : targetDate}:00</div>
+                        <div class="hours__icon">icon</div>
+                        <div class="hours__temperature">${Math.round(item.temperature) - TEMPERATURE_DELTA}${CELSIUS_DEGREES}</div>
+                    </li>
+                `;
+
+                hoursTemperature.insertAdjacentHTML('beforeend', element);
+
+                return ++acc;
+            } else {
+                return acc;
+            }
+        }, 0)
         cityName.textContent = res.ipInfoJson.city[`name_${localStorage.getItem(USER_LANGUAGE)}`];
         countryName.textContent = res.ipInfoJson.country[`name_${localStorage.getItem(USER_LANGUAGE)}`];
         switch (res.weatherJsonParsed.currently.icon) {
@@ -216,3 +257,4 @@ let dragAndDropSlideDay = item => {
 
 dragAndDropSlideDay(slideDay);
 dragAndDropSlideDay(slideHours);
+
