@@ -235,18 +235,19 @@ let dragAndDropSlideDay = item => {
     let isDown = false;
     let startX;
     let scrollLeft;
+    const body = document.querySelector('body');
 
     item.addEventListener('mousedown', e => {
             isDown = true;
-            item.style.cursor = 'grabbing';
+            body.style.cursor = 'grabbing';
             startX = e.pageX - item.offsetLeft;
             scrollLeft = item.scrollLeft;
     });
-    item.addEventListener('mouseup', e => {
+    window.addEventListener('mouseup', e => {
             isDown = false;
-            item.style.cursor = 'default';
+            body.style.cursor = 'default';
     });
-    item.addEventListener('mousemove', e => {
+    window.addEventListener('mousemove', e => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - item.offsetLeft;
