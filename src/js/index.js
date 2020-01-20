@@ -173,13 +173,19 @@ const dropdownList = document.querySelector('.gamburger-menu .search__dropdown-l
 let inputTimer;
 let citySearchResult;
 
-citySearch.addEventListener('input', e => {
+citySearch.addEventListener('keyup', e => {
     clearTimeout(inputTimer);
-    inputTimer = setTimeout(() => {
+    if (e.key === 'Enter') {
         fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${e.target.value}`)
             .then(res => res.json())
             .then(res => parseCitySearch(res));
-    }, 1000);
+    } else {
+        inputTimer = setTimeout(() => {
+            fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${e.target.value}`)
+                .then(res => res.json())
+                .then(res => parseCitySearch(res));
+        }, 1000);
+    }
 })
 
 let parseCitySearch = res => {
@@ -238,21 +244,21 @@ let dragAndDropSlideDay = item => {
     const body = document.querySelector('body');
 
     item.addEventListener('mousedown', e => {
-            isDown = true;
-            body.style.cursor = 'grabbing';
-            startX = e.pageX - item.offsetLeft;
-            scrollLeft = item.scrollLeft;
+        isDown = true;
+        body.style.cursor = 'grabbing';
+        startX = e.pageX - item.offsetLeft;
+        scrollLeft = item.scrollLeft;
     });
     window.addEventListener('mouseup', e => {
-            isDown = false;
-            body.style.cursor = 'default';
+        isDown = false;
+        body.style.cursor = 'default';
     });
     window.addEventListener('mousemove', e => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - item.offsetLeft;
-            const walk = (x - startX) * 2;
-            item.scrollLeft = scrollLeft - walk;
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - item.offsetLeft;
+        const walk = (x - startX) * 2;
+        item.scrollLeft = scrollLeft - walk;
     });
 }
 
