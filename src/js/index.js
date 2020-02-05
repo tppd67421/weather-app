@@ -27,11 +27,11 @@ localStorage.getItem(USER_LANGUAGE) === 'en'
 const bgImage = document.querySelector('.wrap');
 const temperature = document.querySelector('.description__temperature');
 const descriptionText = document.querySelector('.description__text');
-const cloudy = document.querySelector('.gamburger-menu .details .cloudy__value');
-const humidity = document.querySelector('.gamburger-menu .details .humidity__value');
-const windSpeed = document.querySelector('.gamburger-menu .details .wind-speed__value');
-const dayTemperature = document.querySelector('.gamburger-menu .slider .day');
-const hoursTemperature = document.querySelector('.gamburger-menu .slider .hours');
+const cloudy = document.querySelector('.hamburger-menu .details .cloudy__value');
+const humidity = document.querySelector('.hamburger-menu .details .humidity__value');
+const windSpeed = document.querySelector('.hamburger-menu .details .wind-speed__value');
+const dayTemperature = document.querySelector('.hamburger-menu .slider .day');
+const hoursTemperature = document.querySelector('.hamburger-menu .slider .hours');
 const cityName = document.querySelector('.city__name_city');
 const countryName = document.querySelector('.city__name_country');
 const time = document.querySelector('.time');
@@ -168,8 +168,16 @@ let setTime = () => {
 };
 
 
-const citySearch = document.querySelector('.gamburger-menu .search__input');
-const dropdownList = document.querySelector('.gamburger-menu .search__dropdown-list');
+const hamburger = document.querySelector('.hamburger-menu-wrap .hamburger-menu .button');
+const hamburgerMenu = document.querySelector('.hamburger-menu-wrap .hamburger-menu');
+
+hamburger.addEventListener('click', () => {
+    hamburgerMenu.classList.toggle('active')
+})
+
+
+const citySearch = document.querySelector('.hamburger-menu .search__input');
+const dropdownList = document.querySelector('.hamburger-menu .search__dropdown-list');
 let inputTimer;
 let citySearchResult;
 
@@ -223,11 +231,11 @@ window.addEventListener('click', e => {
 })
 
 
-const daySwitch = document.querySelector('.gamburger-menu .header .slider-button__day');
-const hoursSwitch = document.querySelector('.gamburger-menu .header .slider-button__hours');
-const slider = document.querySelector('.gamburger-menu .slider');
-const slideDay = document.querySelector('.gamburger-menu .slider .day');
-const slideHours = document.querySelector('.gamburger-menu .slider .hours');
+const daySwitch = document.querySelector('.hamburger-menu .header .slider-button__day');
+const hoursSwitch = document.querySelector('.hamburger-menu .header .slider-button__hours');
+const slider = document.querySelector('.hamburger-menu .slider');
+const slideDay = document.querySelector('.hamburger-menu .slider .day');
+const slideHours = document.querySelector('.hamburger-menu .slider .hours');
 
 daySwitch.addEventListener('click', () => {
     slider.classList.remove('shift');
