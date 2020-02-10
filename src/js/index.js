@@ -2,10 +2,24 @@ import 'babel-polyfill';
 
 const BROWSER_LANGUAGE = navigator.language || navigator.userLanguage;
 const USER_LANGUAGE = 'user_language';
-const CELSIUS_DEGREES = '°';
+
+const TEMPERATURE_SCALE = 'temperature_scale';
+const CELSIUS = 'celsius';
+const FARENHEIT = 'farenheit';
+
+const CELSIUS_DEGREES = '°C';
+const FARENHEIT_DEGREES = '°F';
+
+const CURRENT_TEMPERATURE = 'current_temperature';
+let CURRENT_TEMPERATURE_VALUE;
+let DAILY_TEMPERATURE_VALUE;
 
 if (localStorage.getItem(USER_LANGUAGE) === null && localStorage.getItem(USER_LANGUAGE) !== BROWSER_LANGUAGE) {
     localStorage.setItem(USER_LANGUAGE, BROWSER_LANGUAGE.slice(0, 2));
+}
+
+if (localStorage.getItem(TEMPERATURE_SCALE) === null) {
+    localStorage.setItem(TEMPERATURE_SCALE, CELSIUS);
 }
 
 const WELCOME_INSPIRATION_EN = 'Whats the weather?';
@@ -13,7 +27,7 @@ const WELCOME_INSPIRATION_RU = 'Какая сейчас погода?';
 
 const KILOMETRES_PER_HOUR = 1.6;
 
-const DAYS_OF_THE_WEEK = [
+const DAYS_OF_THE_WEEK_RU = [
     'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'
 ];
 
@@ -67,7 +81,12 @@ navigator.geolocation.getCurrentPosition(success, error);
 
 let responseParse = res => {
     if (res) {
-        temperature.textContent = `${Math.trunc(res.weatherJsonParsed.currently.temperature - TEMPERATURE_DELTA)}${CELSIUS_DEGREES}`;
+        if (localStorage.getItem(TEMPERATURE_SCALE) === CELSIUS) {
+            localStorage.setItem(CURRENT_TEMPERATURE, Math.trunc(res.weatherJsonParsed.currently.temperature) - TEMPERATURE_DELTA);
+        } else {
+            localStorage.setItem(CURRENT_TEMPERATURE, Math.trunc(res.weatherJsonParsed.currently.temperature));
+        }
+        temperature.textContent = setTemperatureScale(localStorage.getItem(CURRENT_TEMPERATURE), localStorage.getItem(TEMPERATURE_SCALE));
         descriptionText.textContent = res.weatherJsonParsed.currently.summary;
         cloudy.textContent = `${res.weatherJsonParsed.currently.cloudCover * 100}%`;
         humidity.textContent = `${res.weatherJsonParsed.currently.humidity * 100}%`;
@@ -78,9 +97,16 @@ let responseParse = res => {
             if (new Date().getDay() < new Date(item.time * 1000).getDay() || acc !== 0) {
                 let element = `
                     <li class="day__item">
-                        <div class="day__day-week">${DAYS_OF_THE_WEEK[new Date(item.time * 1000).getDay()]}</div>
+                        <div class="day__day-week">${DAYS_OF_THE_WEEK_RU[new Date(item.time * 1000).getDay()]}</div>
                         <div class="day__icon">icon</div>
-                        <div class="day__temperature">${Math.round(((item.temperatureHigh + item.temperatureLow) / 2) - TEMPERATURE_DELTA)}${CELSIUS_DEGREES}</div>
+                        <div class="day__temperature">${
+                    setTemperatureScale(
+                        (localStorage.getItem(TEMPERATURE_SCALE) === CELSIUS
+                            ? Math.round((item.temperatureHigh + item.temperatureLow) / 2) - TEMPERATURE_DELTA
+                            : Math.round((item.temperatureHigh + item.temperatureLow) / 2)
+                        ),
+                        localStorage.getItem(TEMPERATURE_SCALE)
+                    )}</div>
                     </li>`;
 
                 dayTemperature.insertAdjacentHTML('beforeend', element);
@@ -97,7 +123,14 @@ let responseParse = res => {
                     <li class="hours__item">
                         <div class="hours__hour">${targetDate < 10 ? '0' + targetDate : targetDate}:00</div>
                         <div class="hours__icon">icon</div>
-                        <div class="hours__temperature">${Math.round(item.temperature) - TEMPERATURE_DELTA}${CELSIUS_DEGREES}</div>
+                        <div class="hours__temperature">${
+                    setTemperatureScale(
+                        (localStorage.getItem(TEMPERATURE_SCALE) === CELSIUS
+                            ? Math.round(item.temperature) - TEMPERATURE_DELTA
+                            : Math.round(item.temperature)
+                        ),
+                        localStorage.getItem(TEMPERATURE_SCALE)
+                    )}</div>
                     </li>
                 `;
 
@@ -149,6 +182,31 @@ let responseParse = res => {
         preloaderSection.classList.remove('active');
     }
 };
+
+let setTemperatureScale = (value, targetTemperatureScale) => {
+    if (targetTemperatureScale !== localStorage.getItem(TEMPERATURE_SCALE)) {
+        switch (targetTemperatureScale) {
+            case CELSIUS:
+                return `${+value - TEMPERATURE_DELTA}${CELSIUS_DEGREES}`;
+
+            case FARENHEIT:
+                return `${+value + TEMPERATURE_DELTA}${FARENHEIT_DEGREES}`;
+        }
+    } else {
+        switch (targetTemperatureScale) {
+            case CELSIUS:
+                return `${value}${CELSIUS_DEGREES}`;
+
+            case FARENHEIT:
+                return `${value}${FARENHEIT_DEGREES}`;
+        }
+    }
+};
+
+let temperatureScaleCelsius = () => {
+    if (localStorage.getItem(TEMPERATURE_SCALE) === CELSIUS) return true;
+    else return false;
+}
 
 let setTime = () => {
     let currentlyDate = new Date();
@@ -273,3 +331,38 @@ let dragAndDropSlideDay = item => {
 dragAndDropSlideDay(slideDay);
 dragAndDropSlideDay(slideHours);
 
+
+
+const temperatureScale = document.querySelector('.hamburger-menu .menu .temperature-scale');
+
+temperatureScale.addEventListener('click', e => {
+    switch (e.target.className) {
+        case 'temperature-scale__celsius':
+            if (localStorage.getItem(TEMPERATURE_SCALE) !== CELSIUS) {
+                temperature.textContent = setTemperatureScale(temperature.textContent.slice(0, -2), CELSIUS);
+                document.querySelectorAll('.menu .menu__temperature .day .day__temperature').forEach(item => {
+                    item.textContent = setTemperatureScale(item.textContent.slice(0, -2), CELSIUS);
+                })
+                document.querySelectorAll('.menu .menu__temperature .hours .hours__temperature').forEach(item => {
+                    item.textContent = setTemperatureScale(item.textContent.slice(0, -2), CELSIUS);
+                })
+                localStorage.setItem(CURRENT_TEMPERATURE, temperature.textContent.slice(0, -2));
+                localStorage.setItem(TEMPERATURE_SCALE, CELSIUS);
+            }
+            break;
+
+        case 'temperature-scale__fahrenheit':
+            if (localStorage.getItem(TEMPERATURE_SCALE) !== FARENHEIT) {
+                temperature.textContent = setTemperatureScale(temperature.textContent.slice(0, -2), FARENHEIT);
+                document.querySelectorAll('.menu .menu__temperature .day .day__temperature').forEach(item => {
+                    item.textContent = setTemperatureScale(item.textContent.slice(0, -2), FARENHEIT);
+                })
+                document.querySelectorAll('.menu .menu__temperature .hours .hours__temperature').forEach(item => {
+                    item.textContent = setTemperatureScale(item.textContent.slice(0, -2), FARENHEIT);
+                })
+                localStorage.setItem(CURRENT_TEMPERATURE, temperature.textContent.slice(0, -2));
+                localStorage.setItem(TEMPERATURE_SCALE, FARENHEIT);
+            }
+            break;
+    }
+})
