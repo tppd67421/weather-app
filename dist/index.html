@@ -2,55 +2,107 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Weather app</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="manifest" href="manifest.json">
+	<title>Weather app</title>
 <link href="app.css" rel="stylesheet"></head>
 
 <body>
 
-  <section class="preloader-wrap active">
-    <div class="preloader">
-      <h2 class="preloader__title">&#160;</h2>
-      <div class="bar">
-        <div class="bar__item"></div>
-      </div>
-    </div>
-  </section>
+	<section class="preloader-wrap active">
+		<div class="preloader">
+			<h2 class="preloader__title">&#160;</h2>
+			<div class="bar">
+				<div class="bar__item"></div>
+			</div>
+		</div>
+	</section>
 
-  <section class="wrap">
-    <div class="hamburger-menu-wrap">
-      <div class="hamburger-menu">
-        <div class="button"></div>
-        <div class="menu">
-          <div class="menu__search">
-            <input class="input" type="search" id="menu-search-input">
-            <ul class="dropdown-list" id="dropdown-list"></ul>
-          </div>
-          <div style="width: 100%; background: red; height: 150px;"></div>
-        </div>
-      </div>
-    </div>
+	<section class="wrap">
+		<div class="hamburger-menu-wrap">
+			<div class="hamburger-menu">
+				<div class="button"></div>
+				<div class="menu">
+					<div class="search">
+						<input class="search__input" type="search" id="menu-search-input">
+						<ul class="search__dropdown-list dropdown-list" id="dropdown-list"></ul>
+					</div>
+					<div class="details">
+						<h3 class="menu__title">Details</h3>
+						<div class="cloudy">
+							<h5 class="cloudy__title">Cloudy</h5>
+							<p class="cloudy__value"></p>
+						</div>
+						<div class="humidity">
+							<h5 class="humidity__title">Humidity</h5>
+							<p class="humidity__value"></p>
+						</div>
+						<div class="wind-speed">
+							<h5 class="wind-speed__title">Wind</h5>
+							<p class="wind-speed__value"></p>
+						</div>
+					</div>
+					<div class="menu__temperature">
+						<div class="header">
+							<h3 class="menu__title">Temperature</h3>
+							<div class="slider-button">
+								<p class="slider-button__day">Day</p>
+								<p class="slider-button__hours">Hours</p>
+							</div>
+						</div>
+						<div class="slider-wrap">
+							<div class="slider">
+								<ul class="day"></ul>
+								<ul class="hours"></ul>
+							</div>
+						</div>
+					</div>
+					<div class="temperature-scale">
+						<div class="temperature-scale__celsius">°C</div>
+						<div class="temperature-scale__fahrenheit">°F</div>
+					</div>
+					<div style="width: 100%; background: red; height: 150px;"></div>
+				</div>
+			</div>
+		</div>
 
-    <div class="description">
-      <p class="description__temperature">14&#176;</p>
-      <p class="description__text">Сильная Облачность</p>
-    </div>
+		<div class="description">
+			<p class="description__temperature">14&#176;</p>
+			<p class="description__text">Сильная Облачность</p>
+		</div>
 
-    <footer class="footer">
-      <div class="footer__time-date">
-        <span class="time">12:42</span> &#8211; <span class="date">08.01.2020</span>
-      </div>
-      <div class="footer__city city">
-        <div class="city__name">
-          <span class="city__name_city">Минск</span>, <span class="city__name_country">Беларусь</span>
-        </div>
-        <div class="city__button">изменить</div>
-      </div>
-    </footer>
-  </section>
+		<footer class="footer">
+			<div class="footer__time-date">
+				<span class="time">12:42</span> &#8211; <span class="date">08.01.2020</span>
+			</div>
+			<div class="footer__city city">
+				<div class="city__name">
+					<span class="city__name_city">Минск</span>, <span class="city__name_country">Беларусь</span>
+				</div>
+				<div class="city__button">изменить</div>
+			</div>
+		</footer>
+	</section>
 
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function() {
+				navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+					// Registration was successful
+				console.log('ServiceWorker registration successful with scope: ', registration.scope);
+			  }, function(err) {
+				// registration failed :(
+				console.log('ServiceWorker registration failed: ', err);
+			  }).catch(function(err) {
+				console.log(err)
+			  });
+			});
+		  } else {
+			console.log('service worker is not supported');
+		  }
+	</script>
 <script type="text/javascript" src="assets/js/app.js"></script></body>
 
 </html>
