@@ -1,6 +1,6 @@
 export default class DailyHourlyForecast {
     constructor() {
-        this.daySwitch = document.querySelector('.hamburger-menu .header .slider-button__day');
+        this.daySwitch = document.querySelector('.hamburger-menu .header .slider-button__days');
         this.hoursSwitch = document.querySelector('.hamburger-menu .header .slider-button__hours');
         this.slider = document.querySelector('.hamburger-menu .slider');
         this.slideDay = document.querySelector('.hamburger-menu .slider .day');

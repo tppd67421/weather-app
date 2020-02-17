@@ -1,11 +1,16 @@
 import constants from './../constants';
+import contentEn from './../setTargetLanguage/contentEn';
+import contentRu from './../setTargetLanguage/contentRu';
 import BrowserLocalStorage from './../browserLocalStorage';
 import Preloader from './../preloader';
+import LanguageSwitcher from './../hamburgerMenu/languageSwitcher';
 
 export default class ResponseParseSetValue {
     constructor() {
         this.browserLocalStorage = new BrowserLocalStorage();
         this.preloader = new Preloader();
+
+        this.languageSwitcher = new LanguageSwitcher();
 
         this.bgImage = document.querySelector('.wrap');
         this.temperature = document.querySelector('.description__temperature');
@@ -55,6 +60,8 @@ export default class ResponseParseSetValue {
 
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 
+            this.languageSwitcher.activateSelect();
+            
             this.setTime();
             this.preloader.remove();
         }
@@ -63,9 +70,12 @@ export default class ResponseParseSetValue {
     dailyParseSetData(data) {
         data.reduce((acc, item) => {
             if (new Date().getDay() < new Date(item.time * 1000).getDay() || acc !== 0) {
+                const daysTemperatureContent =
+                    this.browserLocalStorage.getItem(constants.USER_LANGUAGE) === constants.RUSSIAN ?
+                        contentRu : contentEn;
                 let element = `
                     <li class="day__item">
-                        <div class="day__day-week">${constants.DAYS_OF_THE_WEEK_RU[new Date(item.time * 1000).getDay()]}</div>
+                        <div class="day__day-week">${daysTemperatureContent}</div>
                         <div class="day__icon">icon</div>
                         <div class="day__temperature">${
                     this.setTemperatureScale(

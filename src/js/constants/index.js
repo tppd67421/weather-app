@@ -12,17 +12,13 @@ export default {
     CELSIUS_DEGREES: '°C',
     FARENHEIT_DEGREES: '°F',
 
+    HAMBURGER_MENU: 'hamburger_menu',
+    HAMBURGER_MENU_OPEN: 'open',
+    HAMBURGER_MENU_CLOSE: 'close',
+
     CURRENT_TEMPERATURE: 'current_temperature',
 
-    KILOMETRES_PER_HOUR: 1.6,
+    KILOMETRES_PER_HOUR: 3.6,
 
     TEMPERATURE_DELTA: 32,
-
-    DAYS_OF_THE_WEEK_RU: [
-        'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'
-    ],
-
-    DAYS_OF_THE_WEEK_EN: [
-        'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
-    ],
 }

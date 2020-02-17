@@ -13,7 +13,7 @@
 
 	<section class="preloader-wrap active">
 		<div class="preloader">
-			<h2 class="preloader__title">&#160;</h2>
+			<h2 class="preloader__title">Whats the weather?</h2>
 			<div class="bar">
 				<div class="bar__item"></div>
 			</div>
@@ -26,11 +26,11 @@
 				<div class="button"></div>
 				<div class="menu">
 					<div class="search">
-						<input class="search__input" type="search" id="menu-search-input">
+						<input class="search__input" type="text" id="menu-search-input">
 						<ul class="search__dropdown-list dropdown-list" id="dropdown-list"></ul>
 					</div>
 					<div class="details">
-						<h3 class="menu__title">Details</h3>
+						<h3 class="menu__title">Weather details</h3>
 						<div class="cloudy">
 							<h5 class="cloudy__title">Cloudy</h5>
 							<p class="cloudy__value"></p>
@@ -48,7 +48,7 @@
 						<div class="header">
 							<h3 class="menu__title">Temperature</h3>
 							<div class="slider-button">
-								<p class="slider-button__day">Day</p>
+								<p class="slider-button__days">Days</p>
 								<p class="slider-button__hours">Hours</p>
 							</div>
 						</div>
@@ -62,6 +62,12 @@
 					<div class="temperature-scale">
 						<div class="temperature-scale__celsius">°C</div>
 						<div class="temperature-scale__fahrenheit">°F</div>
+					</div>
+					<div class="language">
+						<select class="language__item">
+							<option class="english" value="en"></option>
+							<option class="russian" value="ru"></option>
+						</select>
 					</div>
 					<div style="width: 100%; background: red; height: 150px;"></div>
 				</div>

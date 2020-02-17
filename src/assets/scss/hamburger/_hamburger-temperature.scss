@@ -1,0 +1,36 @@
+.slider-wrap {
+    overflow: hidden;
+    .slider {
+        display: flex;
+        width: calc(100% * 2);
+        position: relative;
+        transition: 500ms;
+        &.shift {
+            transform: translateX(-50%);
+        }
+        .day,
+        .hours {
+            display: flex;
+            overflow-x: scroll;
+            width: 100%;
+            user-select: none;
+            scrollbar-width: thin;
+            & > * {
+                pointer-events: none;
+            }
+            &__item {
+                padding: 0 30px;
+            }
+        }
+        .day {
+            &__item {
+                &.yesterday {
+                    opacity: 0.5;
+                }
+                &.today {
+                    background-color: rgba(red, 0.5);
+                }
+            }
+        }
+    }
+}

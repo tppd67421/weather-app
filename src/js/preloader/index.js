@@ -1,6 +1,6 @@
 import constants from './../constants';
-import contentRu from './../content/contentRu';
-import contentEn from './../content/contentEn';
+import contentRu from '../setTargetLanguage/contentRu';
+import contentEn from '../setTargetLanguage/contentEn';
 
 export default class Preloader {
     constructor() {

@@ -6,13 +6,15 @@ export default class WeatherDeterminationQuery {
     constructor() {
         this.responseParseSetValue = new ResponseParseSetValue();
         this.browserLocalStorage = new BrowserLocalStorage();
+    }
 
+    geolocation() {
         navigator.geolocation.getCurrentPosition(
             (...args) => this.success(...args),
             (...args) => this.error(...args)
         );
     }
-
+    
     success(pos) {
         let crd = pos.coords;
         this.query(crd.latitude, crd.longitude).then(res => this.responseParseSetValue.responseParse(res));
