@@ -1,6 +1,8 @@
 export default {
     preloaderText: 'Что с погодой?',
 
+    cityChange: 'изменить',
+
     weatherDetailsTitle: 'Дополнительно',
     weatherDetailsCloudy: 'Облачность',
     weatherDetailsHumidity: 'Влажность',

@@ -7,6 +7,8 @@ export default class SetTargetLanguage {
         
         this.preloaderTitle = document.querySelector('.preloader__title');
 
+        this.cityChange = document.querySelector('.footer .city__change');
+
         this.weatherDetails = document.querySelector('.details');
         this.weatherDetailsTitle = this.weatherDetails.querySelector('.menu__title');
         this.weatherDetailsCloudy = this.weatherDetails.querySelector('.cloudy__title');
@@ -37,6 +39,8 @@ export default class SetTargetLanguage {
         this.weatherTemperatureDaysList = this.weatherTemperature.querySelectorAll('.day__item');
 
         this.preloaderTitle.textContent = this.languageContent.preloaderText;
+
+        this.cityChange.textContent = this.languageContent.cityChange;
 
         this.weatherDetailsTitle.textContent = this.languageContent.weatherDetailsTitle;
         this.weatherDetailsCloudy.textContent = this.languageContent.weatherDetailsCloudy;

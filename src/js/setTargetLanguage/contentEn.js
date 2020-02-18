@@ -1,6 +1,8 @@
 export default {
     preloaderText: 'What\'s the weather?',
 
+    cityChange: 'change',
+
     weatherDetailsTitle: 'Weather details',
     weatherDetailsCloudy: 'Cloudy',
     weatherDetailsHumidity: 'Humidity',
