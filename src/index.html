@@ -13,7 +13,7 @@
 
 	<section class="preloader-wrap active">
 		<div class="preloader">
-			<h2 class="preloader__title">Whats the weather?</h2>
+			<h2 class="preloader__title">What's the weather?</h2>
 			<div class="bar">
 				<div class="bar__item"></div>
 			</div>
@@ -91,6 +91,15 @@
 			</div>
 		</footer>
 	</section>
+
+	<script>
+		const preloaderTitle = document.querySelector('.preloader__title');
+		if (localStorage.getItem('user_language') === 'ru') {
+			preloaderTitle.textContent = 'Что с погодой?';
+		} else {
+			preloaderTitle.textContent = 'What\'s the weather?';
+		}
+	</script>
 
 	<script>
 		if ('serviceWorker' in navigator) {

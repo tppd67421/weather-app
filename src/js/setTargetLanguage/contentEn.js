@@ -1,5 +1,5 @@
 export default {
-    preloaderText: 'Whats the weather?',
+    preloaderText: 'What\'s the weather?',
 
     weatherDetailsTitle: 'Weather details',
     weatherDetailsCloudy: 'Cloudy',
