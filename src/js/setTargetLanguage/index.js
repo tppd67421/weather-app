@@ -20,8 +20,14 @@ export default class SetTargetLanguage {
         this.weatherTemperatureDays = this.weatherTemperature.querySelector('.slider-button__days');
         this.weatherTemperatureHours = this.weatherTemperature.querySelector('.slider-button__hours');
 
-        this.selectEnglish = document.querySelector('.language__item .english');
-        this.selectRussian = document.querySelector('.language__item .russian');
+        this.languageEnglish = document.querySelector('.language__item .english');
+        this.languageRussian = document.querySelector('.language__item .russian');
+        this.languageElement = document.querySelector('.language');
+
+        this.themeAuto = document.querySelector('.theme__item .auto');
+        this.themeDark = document.querySelector('.theme__item .dark');
+        this.themeLight = document.querySelector('.theme__item .light');
+        this.themeElement = document.querySelector('.theme');
     }
 
 
@@ -56,7 +62,27 @@ export default class SetTargetLanguage {
             weatherItem.querySelector('.day__day-week').textContent = this.languageContent.daysOfTheWeek[index];
         });
 
-        this.selectEnglish.textContent = this.languageContent.languageSwitcherEn;
-        this.selectRussian.textContent = this.languageContent.languageSwitcherRu;
+        this.languageEnglish.textContent = this.languageContent.languageSwitcherEn;
+        this.languageRussian.textContent = this.languageContent.languageSwitcherRu;
+        this.changeLanguageForSelect(this.languageElement);
+
+        this.themeAuto.textContent = this.languageContent.themeAuto;
+        this.themeDark.textContent = this.languageContent.themeDark;
+        this.themeLight.textContent = this.languageContent.themeLight;
+        this.changeLanguageForSelect(this.themeElement);
+    }
+
+    changeLanguageForSelect(element) {
+        this.languageSelect = element.querySelector('.select');
+        this.languageSelectItem = this.languageSelect.querySelectorAll('option');
+        this.languageViewListMain = element.querySelector('.select-main');
+        this.languageViewListWrap = element.querySelector('.select-list-wrap');
+        this.languageViewListItems = this.languageViewListWrap.querySelectorAll('li');
+
+        this.languageViewListMain.textContent = this.languageSelect.querySelector(`[value=${this.languageSelect.value}`).textContent;
+        
+        this.languageViewListItems.forEach((item, index) => {
+            item.textContent = this.languageSelectItem[index].textContent;
+        });
     }
 }

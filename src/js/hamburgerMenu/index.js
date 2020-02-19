@@ -3,6 +3,8 @@ import DailyHourlyForecast from './dailyHourlyForecast';
 import TemperatureScale from './temperatureScale';
 import BrowserLocalStorage from './../browserLocalStorage';
 import constants from './../constants';
+import ThemeSwitcher from './switcher/themeSwitcher';
+import LanguageSwitcher from './switcher/languageSwither';
 
 export default class HamburgerMenu {
     constructor() {
@@ -15,7 +17,11 @@ export default class HamburgerMenu {
         this.citySearch = new CitySearch();
         this.dailyHourlyForecast = new DailyHourlyForecast();
         this.temperatureScale = new TemperatureScale();
-        // languageSwitcher called inside responseParseValue
+        
+        this.languageSwitcher = new LanguageSwitcher(document.querySelector('.menu .language'));
+        this.languageSwitcher.activateSelect()
+        this.themeSwitcher = new ThemeSwitcher(document.querySelector('.menu .theme'));
+        this.themeSwitcher.activateSelect();
     }
 
     checkOpenedAndAddEvent() {

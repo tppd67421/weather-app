@@ -17,4 +17,8 @@ export default {
     
     languageSwitcherRu: 'russian',
     languageSwitcherEn: 'english',
+
+    themeAuto: 'auto',
+    themeDark: 'dark',
+    themeLight: 'light',
 }

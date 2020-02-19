@@ -64,9 +64,16 @@
 						<div class="temperature-scale__fahrenheit">°F</div>
 					</div>
 					<div class="language">
-						<select class="language__item">
+						<select class="select language__item">
 							<option class="english" value="en"></option>
 							<option class="russian" value="ru"></option>
+						</select>
+					</div>
+					<div class="theme">
+						<select class="select theme__item">
+							<option class="auto" value="auto"></option>
+							<option class="dark" value="dark"></option>
+							<option class="light" value="light"></option>
 						</select>
 					</div>
 					<div style="width: 100%; background: red; height: 150px;"></div>
@@ -103,20 +110,20 @@
 
 	<script>
 		if ('serviceWorker' in navigator) {
-			window.addEventListener('load', function() {
-				navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+			window.addEventListener('load', function () {
+				navigator.serviceWorker.register('./service-worker.js').then(function (registration) {
 					// Registration was successful
-				console.log('ServiceWorker registration successful with scope: ', registration.scope);
-			  }, function(err) {
-				// registration failed :(
-				console.log('ServiceWorker registration failed: ', err);
-			  }).catch(function(err) {
-				console.log(err)
-			  });
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function (err) {
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				}).catch(function (err) {
+					console.log(err)
+				});
 			});
-		  } else {
+		} else {
 			console.log('service worker is not supported');
-		  }
+		}
 	</script>
 </body>
 

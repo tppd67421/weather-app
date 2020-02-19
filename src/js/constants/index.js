@@ -5,6 +5,12 @@ export default {
     BROWSER_LANGUAGE: (navigator.language || navigator.userLanguage).slice(0, 2),
     USER_LANGUAGE: 'user_language',
 
+    THEME: 'theme',
+    THEME_AUTO: 'auto',
+    THEME_DARK: 'dark',
+    THEME_LIGHT: 'light',
+    THEME_ATTR: 'data-theme',
+
     TEMPERATURE_SCALE: 'temperature_scale',
     CELSIUS: 'celsius',
     FARENHEIT: 'farenheit',

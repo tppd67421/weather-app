@@ -3,14 +3,14 @@ import contentEn from './../setTargetLanguage/contentEn';
 import contentRu from './../setTargetLanguage/contentRu';
 import BrowserLocalStorage from './../browserLocalStorage';
 import Preloader from './../preloader';
-import LanguageSwitcher from './../hamburgerMenu/languageSwitcher';
+import SetTargetLanguage from '../setTargetLanguage';
 
 export default class ResponseParseSetValue {
     constructor() {
         this.browserLocalStorage = new BrowserLocalStorage();
         this.preloader = new Preloader();
 
-        this.languageSwitcher = new LanguageSwitcher();
+        this.setTargetLanguage = new SetTargetLanguage();
 
         this.bgImage = document.querySelector('.wrap');
         this.temperature = document.querySelector('.description__temperature');
@@ -60,7 +60,7 @@ export default class ResponseParseSetValue {
 
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 
-            this.languageSwitcher.activateSelect();
+            this.setTargetLanguage.setLanguage(this.browserLocalStorage.getItem(constants.USER_LANGUAGE));
             
             this.setTime();
             this.preloader.remove();

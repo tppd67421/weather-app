@@ -1,0 +1,17 @@
+[data-theme=auto] {
+    --primary-color: red;
+}
+
+[data-theme=light] {
+    --primary-color: #fff;
+}
+
+[data-theme=dark] {
+    --primary-color: #000;
+}
+
+.wrap {
+    background: var(--primary-color);
+    /* background: var(--primary-color) !important; */
+}
+
