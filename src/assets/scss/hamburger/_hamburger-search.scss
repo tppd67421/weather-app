@@ -1,14 +1,21 @@
 .search {
     position: relative;
+    display: flex;
     &__input {
         width: 100%;
         box-sizing: border-box;
+    }
+    &__add {
+        width: 30px;
+        background-color: red;
+        cursor: pointer;
     }
     &__dropdown-list {
         position: absolute;
         display: none;
         background-color: #fff;
         z-index: 3;
+        top: 20px;
         &.active {
             display: block;
         }

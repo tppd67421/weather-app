@@ -13,7 +13,7 @@
 
 	<section class="preloader-wrap active">
 		<div class="preloader">
-			<h2 class="preloader__title">&#160;</h2>
+			<h2 class="preloader__title">What's the weather?</h2>
 			<div class="bar">
 				<div class="bar__item"></div>
 			</div>
@@ -26,11 +26,12 @@
 				<div class="button"></div>
 				<div class="menu">
 					<div class="search">
-						<input class="search__input" type="search" id="menu-search-input">
+						<input class="search__input" type="text" id="menu-search-input">
+						<div class="search__add"></div>
 						<ul class="search__dropdown-list dropdown-list" id="dropdown-list"></ul>
 					</div>
 					<div class="details">
-						<h3 class="menu__title">Details</h3>
+						<h3 class="menu__title">Weather details</h3>
 						<div class="cloudy">
 							<h5 class="cloudy__title">Cloudy</h5>
 							<p class="cloudy__value"></p>
@@ -48,7 +49,7 @@
 						<div class="header">
 							<h3 class="menu__title">Temperature</h3>
 							<div class="slider-button">
-								<p class="slider-button__day">Day</p>
+								<p class="slider-button__days">Days</p>
 								<p class="slider-button__hours">Hours</p>
 							</div>
 						</div>
@@ -62,6 +63,19 @@
 					<div class="temperature-scale">
 						<div class="temperature-scale__celsius">°C</div>
 						<div class="temperature-scale__fahrenheit">°F</div>
+					</div>
+					<div class="language">
+						<select class="select language__item">
+							<option class="english" value="en"></option>
+							<option class="russian" value="ru"></option>
+						</select>
+					</div>
+					<div class="theme">
+						<select class="select theme__item">
+							<option class="auto" value="auto"></option>
+							<option class="dark" value="dark"></option>
+							<option class="light" value="light"></option>
+						</select>
 					</div>
 					<div style="width: 100%; background: red; height: 150px;"></div>
 				</div>
@@ -81,27 +95,36 @@
 				<div class="city__name">
 					<span class="city__name_city">Минск</span>, <span class="city__name_country">Беларусь</span>
 				</div>
-				<div class="city__button">изменить</div>
+				<div class="city__change">change</div>
 			</div>
 		</footer>
 	</section>
 
 	<script>
+		const preloaderTitle = document.querySelector('.preloader__title');
+		if (localStorage.getItem('user_language') === 'ru') {
+			preloaderTitle.textContent = 'Что с погодой?';
+		} else {
+			preloaderTitle.textContent = 'What\'s the weather?';
+		}
+	</script>
+
+	<script>
 		if ('serviceWorker' in navigator) {
-			window.addEventListener('load', function() {
-				navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+			window.addEventListener('load', function () {
+				navigator.serviceWorker.register('./service-worker.js').then(function (registration) {
 					// Registration was successful
-				console.log('ServiceWorker registration successful with scope: ', registration.scope);
-			  }, function(err) {
-				// registration failed :(
-				console.log('ServiceWorker registration failed: ', err);
-			  }).catch(function(err) {
-				console.log(err)
-			  });
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function (err) {
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				}).catch(function (err) {
+					console.log(err)
+				});
 			});
-		  } else {
+		} else {
 			console.log('service worker is not supported');
-		  }
+		}
 	</script>
 <script type="text/javascript" src="assets/js/app.js"></script></body>
 

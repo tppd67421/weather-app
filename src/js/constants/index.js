@@ -2,6 +2,8 @@ export default {
     ENGLISH: 'en',
     RUSSIAN: 'ru',
     
+    CURRENT_CITY: 'current_city',
+    
     BROWSER_LANGUAGE: (navigator.language || navigator.userLanguage).slice(0, 2),
     USER_LANGUAGE: 'user_language',
 

@@ -46,8 +46,8 @@ export default class ResponseParseSetValue {
                     this.browserLocalStorage.getItem(constants.TEMPERATURE_SCALE)
                 );
             this.descriptionText.textContent = res.weatherJsonParsed.currently.summary;
-            this.cloudy.textContent = `${res.weatherJsonParsed.currently.cloudCover * 100}%`;
-            this.humidity.textContent = `${res.weatherJsonParsed.currently.humidity * 100}%`;
+            this.cloudy.textContent = `${Math.floor(res.weatherJsonParsed.currently.cloudCover * 100)}%`;
+            this.humidity.textContent = `${Math.floor(res.weatherJsonParsed.currently.humidity * 100)}%`;
             
             // round number
             this.windSpeed.textContent = `${Math.floor(res.weatherJsonParsed.currently.windSpeed * constants.KILOMETRES_PER_HOUR * 10) / 10}km/h`;
