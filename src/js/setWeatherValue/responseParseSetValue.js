@@ -48,7 +48,7 @@ export default class ResponseParseSetValue {
             this.descriptionText.textContent = res.weatherJsonParsed.currently.summary;
             this.cloudy.textContent = `${Math.floor(res.weatherJsonParsed.currently.cloudCover * 100)}%`;
             this.humidity.textContent = `${Math.floor(res.weatherJsonParsed.currently.humidity * 100)}%`;
-            
+
             // round number
             this.windSpeed.textContent = `${Math.floor(res.weatherJsonParsed.currently.windSpeed * constants.KILOMETRES_PER_HOUR * 10) / 10}km/h`;
 
@@ -61,19 +61,19 @@ export default class ResponseParseSetValue {
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 
             this.setTargetLanguage.setLanguage(this.browserLocalStorage.getItem(constants.USER_LANGUAGE));
-            
+
             this.setTime();
             this.preloader.remove();
         }
     }
 
     dailyParseSetData(data) {
-        data.reduce((acc, item) => {
-            if (new Date().getDay() < new Date(item.time * 1000).getDay() || acc !== 0) {
+        data.forEach(item => {
+            if (new Date().getTime() < item.time * 1000) {
                 const daysTemperatureContent =
                     this.browserLocalStorage.getItem(constants.USER_LANGUAGE) === constants.RUSSIAN ?
                         contentRu : contentEn;
-                let element = `
+                const element = `
                     <li class="day__item">
                         <div class="day__day-week">${daysTemperatureContent}</div>
                         <div class="day__icon">icon</div>
@@ -88,19 +88,15 @@ export default class ResponseParseSetValue {
                     </li>`;
 
                 this.dayTemperature.insertAdjacentHTML('beforeend', element);
-
-                return ++acc;
-            } else {
-                return acc;
             }
-        }, 0);
+        });
     }
 
     hourlyParseSetData(data) {
         data.reduce((acc, item) => {
-            let targetDate = new Date(item.time * 1000).getHours();
-            if ((new Date().getHours() < targetDate || acc !== 0) && acc < 24) {
-                let element = `
+            const targetDate = new Date(item.time * 1000).getHours();
+            if ((new Date().getTime() < item.time * 1000) && acc < 24) {
+                const element = `
                     <li class="hours__item">
                         <div class="hours__hour">${targetDate < 10 ? '0' + targetDate : targetDate}:00</div>
                         <div class="hours__icon">icon</div>
