@@ -74,7 +74,7 @@ export default class CitySearch {
             element.addEventListener('click', () => {
                 this.citySearch.value = element.getAttribute('data-value');
                 this.weatherDeterminationQuery
-                    .query(element.getAttribute('data-lat'), element.getAttribute('data-lng'))
+                    .queryWeather(element.getAttribute('data-lat'), element.getAttribute('data-lng'))
                     .then(res => this.responseParseSetValue.responseParse(res));
             });
         });

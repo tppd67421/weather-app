@@ -54,9 +54,9 @@ export default class ResponseParseSetValue {
 
             this.dailyParseSetData(res.weatherJsonParsed.daily.data);
             this.hourlyParseSetData(res.weatherJsonParsed.hourly.data);
-
-            this.cityName.textContent = res.ipInfoJson.city[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
-            this.countryName.textContent = res.ipInfoJson.country[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
+            
+            this.cityName.textContent = res.ipInfoResult.city;
+            this.countryName.textContent = res.ipInfoResult.country;
 
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 

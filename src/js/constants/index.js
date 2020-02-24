@@ -1,4 +1,6 @@
 export default {
+    EXISTING_LANGUAGE: ['en', 'ru'],
+    
     ENGLISH: 'en',
     RUSSIAN: 'ru',
     

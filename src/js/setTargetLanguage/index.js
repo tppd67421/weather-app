@@ -1,12 +1,18 @@
 import contentEn from './contentEn';
 import contentRu from './contentRu';
+import BrowserLocalStorage from '../browserLocalStorage';
+import constants from './../constants';
 
 export default class SetTargetLanguage {
     constructor() {
+        this.browserLocalStorage = new BrowserLocalStorage();
+        
         this.nextDayDate = new Date().getDay() + 1;
         
         this.preloaderTitle = document.querySelector('.preloader__title');
 
+        this.currentCity = document.querySelector('.city__name_city');
+        this.currentCountry = document.querySelector('.city__name_country');
         this.cityChange = document.querySelector('.footer .city__change');
 
         this.weatherDetails = document.querySelector('.details');
@@ -46,6 +52,9 @@ export default class SetTargetLanguage {
 
         this.preloaderTitle.textContent = this.languageContent.preloaderText;
 
+        const cityWithCountry = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
+        this.currentCity.textContent = cityWithCountry[language].city;
+        this.currentCountry.textContent = cityWithCountry[language].country;
         this.cityChange.textContent = this.languageContent.cityChange;
 
         this.weatherDetailsTitle.textContent = this.languageContent.weatherDetailsTitle;
