@@ -40,19 +40,19 @@ export default class WeatherDeterminationQuery {
         try {
             const ipInfo = await fetch('https://api.sypexgeo.net/json');
             const ipInfoJson = await ipInfo.json();
+
+            const currentCityName = ipInfoJson.city[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
+            const currentCountryName = ipInfoJson.country[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
+
             const ipInfoResult = {
-                city: ipInfoJson.city[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`],
-                country: ipInfoJson.country[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`],
+                cityAndCountry: this.getCityAndCountryValue(currentCityName, currentCountryName),
                 lat: ipInfoJson.city.lat,
                 lon: ipInfoJson.city.lon
             };
 
             const currentLocation = {};
             constants.EXISTING_LANGUAGE.forEach(item => {
-                currentLocation[item] = {
-                    city: ipInfoJson.city[`name_${item}`],
-                    country: ipInfoJson.country[`name_${item}`]
-                };
+                currentLocation[item] = this.getCityAndCountryValue(ipInfoJson.city[`name_${item}`], ipInfoJson.country[`name_${item}`]);
             });
 
             this.browserLocalStorage.setItem(constants.CURRENT_CITY, JSON.stringify(currentLocation));
@@ -60,6 +60,14 @@ export default class WeatherDeterminationQuery {
             return ipInfoResult;
         } catch (error) {
             this.queryError(error);
+        }
+    }
+
+    getCityAndCountryValue(city, country) {
+        if (typeof city === 'undefined' || city === '' || typeof country === 'undefined' || country === '') {
+            return `${city || ''}${country || ''}`;
+        } else {
+            return `${city}, ${country}`;
         }
     }
 

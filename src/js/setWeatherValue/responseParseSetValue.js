@@ -20,8 +20,7 @@ export default class ResponseParseSetValue {
         this.windSpeed = document.querySelector('.hamburger-menu .details .wind-speed__value');
         this.dayTemperature = document.querySelector('.hamburger-menu .slider .day');
         this.hoursTemperature = document.querySelector('.hamburger-menu .slider .hours');
-        this.cityName = document.querySelector('.city__name_city');
-        this.countryName = document.querySelector('.city__name_country');
+        this.cityAndCountryName = document.querySelector('.city__name');
         this.time = document.querySelector('.time');
         this.date = document.querySelector('.date');
     }
@@ -55,8 +54,7 @@ export default class ResponseParseSetValue {
             this.dailyParseSetData(res.weatherJsonParsed.daily.data);
             this.hourlyParseSetData(res.weatherJsonParsed.hourly.data);
             
-            this.cityName.textContent = res.ipInfoResult.city;
-            this.countryName.textContent = res.ipInfoResult.country;
+            this.cityAndCountryName.textContent = res.ipInfoResult.cityAndCountry;
 
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 

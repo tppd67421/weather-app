@@ -11,8 +11,7 @@ export default class SetTargetLanguage {
         
         this.preloaderTitle = document.querySelector('.preloader__title');
 
-        this.currentCity = document.querySelector('.city__name_city');
-        this.currentCountry = document.querySelector('.city__name_country');
+        this.currentCityAndCountry = document.querySelector('.city__name');
         this.cityChange = document.querySelector('.footer .city__change');
 
         this.weatherDetails = document.querySelector('.details');
@@ -53,8 +52,8 @@ export default class SetTargetLanguage {
         this.preloaderTitle.textContent = this.languageContent.preloaderText;
 
         const cityWithCountry = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
-        this.currentCity.textContent = cityWithCountry[language].city;
-        this.currentCountry.textContent = cityWithCountry[language].country;
+
+        this.currentCityAndCountry.textContent = cityWithCountry[language];
         this.cityChange.textContent = this.languageContent.cityChange;
 
         this.weatherDetailsTitle.textContent = this.languageContent.weatherDetailsTitle;
