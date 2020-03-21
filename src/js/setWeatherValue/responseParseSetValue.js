@@ -15,11 +15,14 @@ export default class ResponseParseSetValue {
         this.bgImage = document.querySelector('.wrap');
         this.temperature = document.querySelector('.description__temperature');
         this.descriptionText = document.querySelector('.description__text');
+
+        this.inputSearchCity = document.querySelector('#menu-search-input');
         this.cloudy = document.querySelector('.hamburger-menu .details .cloudy__value');
         this.humidity = document.querySelector('.hamburger-menu .details .humidity__value');
         this.windSpeed = document.querySelector('.hamburger-menu .details .wind-speed__value');
         this.dayTemperature = document.querySelector('.hamburger-menu .slider .day');
         this.hoursTemperature = document.querySelector('.hamburger-menu .slider .hours');
+
         this.cityAndCountryName = document.querySelector('.city__name');
         this.time = document.querySelector('.time');
         this.date = document.querySelector('.date');
@@ -45,9 +48,10 @@ export default class ResponseParseSetValue {
                     this.browserLocalStorage.getItem(constants.TEMPERATURE_SCALE)
                 );
             this.descriptionText.textContent = res.weatherJsonParsed.currently.summary;
+
+            this.inputSearchCity.setAttribute('placeholder', res.userLocation.cityAndCountry);
             this.cloudy.textContent = `${Math.floor(res.weatherJsonParsed.currently.cloudCover * 100)}%`;
             this.humidity.textContent = `${Math.floor(res.weatherJsonParsed.currently.humidity * 100)}%`;
-
             // round number
             this.windSpeed.textContent = `${Math.floor(res.weatherJsonParsed.currently.windSpeed * constants.KILOMETRES_PER_HOUR * 10) / 10}km/h`;
 

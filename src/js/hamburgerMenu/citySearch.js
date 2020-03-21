@@ -6,6 +6,7 @@ import constants from './../constants';
 export default class CitySearch {
     constructor() {
         this.citySearch = document.querySelector('.hamburger-menu .search__input');
+        
         this.dropdownList = document.querySelector('.hamburger-menu .search__dropdown-list');
 
         this.weatherDeterminationQuery = new WeatherDeterminationQuery();
@@ -69,7 +70,7 @@ export default class CitySearch {
                 this.weatherDeterminationQuery
                     .queryWeather(lat, lon)
                     .then(weatherResult => this.responseParseSetValue.responseParse({
-                        userLocation: cityAndCountry,
+                        userLocation: { cityAndCountry },
                         weatherJsonParsed: weatherResult
                     }));
             });

@@ -18,5 +18,5 @@ weatherDeterminationQuery.geolocation();
 const responseParseSetValue = new ResponseParseSetValue();
 
 const hamburgerMenu = new HamburgerMenu();
-
+document.querySelector('#menu-search-input').value = '';
 
