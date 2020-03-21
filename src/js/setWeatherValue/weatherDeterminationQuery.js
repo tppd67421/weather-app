@@ -1,6 +1,7 @@
 import ResponseParseSetValue from './responseParseSetValue';
 import constants from './../constants';
 import BrowserLocalStorage from './../browserLocalStorage';
+import CitySearch from '../hamburgerMenu/citySearch';
 
 export default class WeatherDeterminationQuery {
     constructor() {
@@ -10,27 +11,69 @@ export default class WeatherDeterminationQuery {
 
     geolocation() {
         navigator.geolocation.getCurrentPosition(
-            (...args) => this.success(...args),
-            (...args) => this.error(...args)
+            (...args) => this.getWeatherByGeolocation(...args),
+            (...args) => this.getWeatherByIp(...args)
         );
     }
 
-    success(pos) {
+    getWeatherByGeolocation(pos) {
         let crd = pos.coords;
         this.query(crd.latitude, crd.longitude).then(res => this.responseParseSetValue.responseParse(res));
     }
 
-    error() {
+    getWeatherByIp() {
         this.query().then(res => this.responseParseSetValue.responseParse(res));
     }
 
-    async query() {
+    async query(lat = null, lon = null) {
         try {
-            const ipInfoResult = await this.queryCity();
+            let dataWithLocation;
+            if (lat && lon) {
+                dataWithLocation = await this.getUserLocation(`${lat},${lon}`);
+            } else {
+                dataWithLocation = await this.queryCity();
+            }
 
-            const weatherJsonParsed = await this.queryWeather(ipInfoResult.lat, ipInfoResult.lon);
+            const weatherJsonParsed = await this.queryWeather(dataWithLocation.lat, dataWithLocation.lon);
+            return { userLocation: dataWithLocation, weatherJsonParsed };
+        } catch (error) {
+            this.queryError(error);
+        }
+    }
 
-            return { ipInfoResult, weatherJsonParsed };
+    async getUserLocation(value) {
+        try {
+            const currentLanguage = this.browserLocalStorage.getItem(constants.USER_LANGUAGE);
+
+            const getUserInfo = await fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${value}&language=${currentLanguage}`);
+            const getUserInfoJson = await getUserInfo.json();
+
+            const citySearch = new CitySearch();
+            const cityValue = citySearch.getCityValue(getUserInfoJson.results[0].components);
+            const countryValue = getUserInfoJson.results[0].components.country;
+
+            let currentLocation = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
+
+            if (currentLocation === null) {
+                currentLocation = { [currentLanguage]: this.getCityAndCountryValue(cityValue, countryValue) };
+            } else if (typeof Object.keys(currentLocation).filter(item => item === currentLanguage)[0] === 'undefined') {
+                // if we don't have target language in local storage...
+                currentLocation[currentLanguage] = this.getCityAndCountryValue(cityValue, countryValue);
+            }
+
+            this.browserLocalStorage.setItem(constants.CURRENT_CITY, JSON.stringify(currentLocation));
+
+            const lat = getUserInfoJson.results[0].geometry.lat;
+            const lon = getUserInfoJson.results[0].geometry.lng;
+
+            this.setCurrentLatAndLonInLocalStorage(lat, lon);
+
+            return {
+                lat: lat,
+                lon: lon,
+                cityAndCountry: this.getCityAndCountryValue(cityValue, countryValue),
+                responseResult: getUserInfoJson
+            };
         } catch (error) {
             this.queryError(error);
         }
@@ -38,36 +81,29 @@ export default class WeatherDeterminationQuery {
 
     async queryCity() {
         try {
+            const currentLanguage = this.browserLocalStorage.getItem(constants.USER_LANGUAGE);
+
             const ipInfo = await fetch('https://api.sypexgeo.net/json');
             const ipInfoJson = await ipInfo.json();
 
-            const currentCityName = ipInfoJson.city[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
-            const currentCountryName = ipInfoJson.country[`name_${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`];
-
-            const ipInfoResult = {
-                cityAndCountry: this.getCityAndCountryValue(currentCityName, currentCountryName),
-                lat: ipInfoJson.city.lat,
-                lon: ipInfoJson.city.lon
-            };
+            const currentCityName = ipInfoJson.city[`name_${currentLanguage}`];
+            const currentCountryName = ipInfoJson.country[`name_${currentLanguage}`];
 
             const currentLocation = {};
             constants.EXISTING_LANGUAGE.forEach(item => {
                 currentLocation[item] = this.getCityAndCountryValue(ipInfoJson.city[`name_${item}`], ipInfoJson.country[`name_${item}`]);
             });
-
             this.browserLocalStorage.setItem(constants.CURRENT_CITY, JSON.stringify(currentLocation));
 
-            return ipInfoResult;
+            this.setCurrentLatAndLonInLocalStorage(ipInfoJson.city.lat, ipInfoJson.city.lon);
+
+            return {
+                cityAndCountry: this.getCityAndCountryValue(currentCityName, currentCountryName),
+                lat: ipInfoJson.city.lat,
+                lon: ipInfoJson.city.lon
+            };
         } catch (error) {
             this.queryError(error);
-        }
-    }
-
-    getCityAndCountryValue(city, country) {
-        if (typeof city === 'undefined' || city === '' || typeof country === 'undefined' || country === '') {
-            return `${city || ''}${country || ''}`;
-        } else {
-            return `${city}, ${country}`;
         }
     }
 
@@ -84,4 +120,20 @@ export default class WeatherDeterminationQuery {
     queryError(error) {
         console.log('Error: ', error);
     }
+
+    getCityAndCountryValue(city, country) {
+        if (typeof city === 'undefined' || city === '' || typeof country === 'undefined' || country === '') {
+            return `${city || ''}${country || ''}`;
+        } else {
+            return `${city}, ${country}`;
+        }
+    }
+
+    setCurrentLatAndLonInLocalStorage(lat, lon) {
+        this.browserLocalStorage.setItem(constants.CURRENT_COORDINATES, JSON.stringify({
+            lat: Number(lat),
+            lon: Number(lon)
+        }));
+    }
+
 }

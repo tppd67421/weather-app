@@ -15,6 +15,9 @@ export default class HamburgerMenu {
         this.checkOpenedAndAddEvent();
 
         this.citySearch = new CitySearch();
+        this.citySearch.setKeyboardEvent();
+        this.citySearch.clickHideShowDropdownList();
+        
         this.dailyHourlyForecast = new DailyHourlyForecast();
         this.temperatureScale = new TemperatureScale();
         

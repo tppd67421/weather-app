@@ -5,6 +5,8 @@ export default {
     RUSSIAN: 'ru',
     
     CURRENT_CITY: 'current_city',
+
+    CURRENT_COORDINATES: 'current_coordinates',
     
     BROWSER_LANGUAGE: (navigator.language || navigator.userLanguage).slice(0, 2),
     USER_LANGUAGE: 'user_language',

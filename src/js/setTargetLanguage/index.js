@@ -2,13 +2,14 @@ import contentEn from './contentEn';
 import contentRu from './contentRu';
 import BrowserLocalStorage from '../browserLocalStorage';
 import constants from './../constants';
+import WeatherDeterminationQuery from '../setWeatherValue/weatherDeterminationQuery';
 
 export default class SetTargetLanguage {
     constructor() {
         this.browserLocalStorage = new BrowserLocalStorage();
-        
+
         this.nextDayDate = new Date().getDay() + 1;
-        
+
         this.preloaderTitle = document.querySelector('.preloader__title');
 
         this.currentCityAndCountry = document.querySelector('.city__name');
@@ -37,6 +38,8 @@ export default class SetTargetLanguage {
 
 
     setLanguage(language) {
+        const weatherDeterminationQuery = new WeatherDeterminationQuery();
+
         switch (language) {
             case 'ru':
                 this.languageContent = contentRu;
@@ -52,6 +55,11 @@ export default class SetTargetLanguage {
         this.preloaderTitle.textContent = this.languageContent.preloaderText;
 
         const cityWithCountry = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
+        
+        if (typeof cityWithCountry[language] === 'undefined') {
+            const currentCoordinates = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_COORDINATES));
+            weatherDeterminationQuery.getUserLocation(`${currentCoordinates.lat},${currentCoordinates.lon}`);
+        }
 
         this.currentCityAndCountry.textContent = cityWithCountry[language];
         this.cityChange.textContent = this.languageContent.cityChange;
@@ -88,7 +96,7 @@ export default class SetTargetLanguage {
         this.languageViewListItems = this.languageViewListWrap.querySelectorAll('li');
 
         this.languageViewListMain.textContent = this.languageSelect.querySelector(`[value=${this.languageSelect.value}`).textContent;
-        
+
         this.languageViewListItems.forEach((item, index) => {
             item.textContent = this.languageSelectItem[index].textContent;
         });

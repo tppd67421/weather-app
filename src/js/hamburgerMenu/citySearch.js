@@ -11,9 +11,6 @@ export default class CitySearch {
         this.weatherDeterminationQuery = new WeatherDeterminationQuery();
         this.responseParseSetValue = new ResponseParseSetValue();
         this.browserLocalStorage = new BrowserLocalStorage();
-
-        this.setKeyboardEvent();
-        this.clickHideShowDropdownList();
     }
 
     setKeyboardEvent() {
@@ -35,9 +32,8 @@ export default class CitySearch {
     }
 
     geoQuery(value) {
-        fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${value}&language=${this.browserLocalStorage.getItem(constants.USER_LANGUAGE)}`)
-            .then(res => res.json())
-            .then(res => this.parseCitySearch(res));
+        this.weatherDeterminationQuery.getUserLocation(value)
+            .then(res => this.parseCitySearch(res.responseResult));
     }
 
     parseCitySearch(res) {
@@ -46,38 +42,54 @@ export default class CitySearch {
         res.results.forEach(item => {
             if (item.components._category !== 'place') return;
             
-            let element = document.createElement('li');
+            const element = document.createElement('li');
             element.classList.add('dropdown-list__item');
             element.setAttribute('data-lat', item.geometry.lat);
-            element.setAttribute('data-lng', item.geometry.lng);
+            element.setAttribute('data-lon', item.geometry.lng);
 
-            // attempts get city
-            let city = '';
-            if (typeof item.components.city !== 'undefined') {
-                city = item.components.city;
-            } else if (typeof item.components.town !== 'undefined') {
-                city = item.components.town;
-            } else if (typeof item.components.county !== 'undefined') {
-                city = item.components.county;
-            } else if (typeof item.components.state !== 'undefined') {
-                city = item.components.state;
-            }
+            const city = this.getCityValue(item.components);
+            const country = item.components.country;
+            const itemValue = this.weatherDeterminationQuery.getCityAndCountryValue(city, country);
 
-            const itemValue = city === '' ? item.components.country : `${city}, ${item.components.country}`;
             element.textContent = itemValue;
             element.setAttribute('data-value', itemValue);
             element.setAttribute('data-city', city);
-            element.setAttribute('data-country', item.components.country);
+            element.setAttribute('data-country', country);
             element.setAttribute('title', item.formatted);
             this.dropdownList.append(element);
 
             element.addEventListener('click', () => {
-                this.citySearch.value = element.getAttribute('data-value');
+                const cityAndCountry = element.getAttribute('data-value');
+                this.citySearch.value = cityAndCountry;
+
+                const lat = element.getAttribute('data-lat');
+                const lon = element.getAttribute('data-lon');
+                this.weatherDeterminationQuery.setCurrentLatAndLonInLocalStorage(lat, lon);
+                
                 this.weatherDeterminationQuery
-                    .queryWeather(element.getAttribute('data-lat'), element.getAttribute('data-lng'))
-                    .then(res => this.responseParseSetValue.responseParse(res));
+                    .queryWeather(lat, lon)
+                    .then(weatherResult => this.responseParseSetValue.responseParse({
+                        userLocation: cityAndCountry,
+                        weatherJsonParsed: weatherResult
+                    }));
             });
         });
+    }
+
+    // attempts get city
+    getCityValue(value) {
+        let city = '';
+        if (typeof value.city !== 'undefined') {
+            city = value.city;
+        } else if (typeof value.town !== 'undefined') {
+            city = value.town;
+        } else if (typeof value.county !== 'undefined') {
+            city = value.county;
+        } else if (typeof value.state !== 'undefined') {
+            city = value.state;
+        }
+
+        return city;
     }
 
     removeCityResultList() {

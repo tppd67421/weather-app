@@ -26,11 +26,13 @@ export default class LanguageSwitcher extends Switcher {
     }
 
     changeLanguage(lang) {
+        if (lang === this.browserLocalStorage.getItem(constants.USER_LANGUAGE)) return;
+
+        this.browserLocalStorage.setItem(constants.USER_LANGUAGE, lang);
+
         // language for select tag
         this.select.value = lang;
         this.setTargetLanguage.setLanguage(lang);
         super.setValueInMainSelect();
-
-        this.browserLocalStorage.setItem(constants.USER_LANGUAGE, lang);
     }
 }

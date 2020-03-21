@@ -54,7 +54,7 @@ export default class ResponseParseSetValue {
             this.dailyParseSetData(res.weatherJsonParsed.daily.data);
             this.hourlyParseSetData(res.weatherJsonParsed.hourly.data);
             
-            this.cityAndCountryName.textContent = res.ipInfoResult.cityAndCountry;
+            this.cityAndCountryName.textContent = res.userLocation.cityAndCountry;
 
             this.bgParseSetData(res.weatherJsonParsed.currently.icon);
 
@@ -177,7 +177,7 @@ export default class ResponseParseSetValue {
     }
 
     setTime() {
-        let currentlyDate = new Date();
+        let currentlyDate = new Date(); // momentjs
 
         let formatDateTime = currentlyDateTimeItem => {
             return currentlyDateTimeItem < 10 ? `0${currentlyDateTimeItem}` : currentlyDateTimeItem;
