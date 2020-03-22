@@ -1,12 +1,11 @@
 import WeatherDeterminationQuery from './../setWeatherValue/weatherDeterminationQuery';
 import ResponseParseSetValue from './../setWeatherValue/responseParseSetValue';
 import BrowserLocalStorage from '../browserLocalStorage';
-import constants from './../constants';
 
 export default class CitySearch {
     constructor() {
         this.citySearch = document.querySelector('.hamburger-menu .search__input');
-        
+
         this.dropdownList = document.querySelector('.hamburger-menu .search__dropdown-list');
 
         this.weatherDeterminationQuery = new WeatherDeterminationQuery();
@@ -42,7 +41,7 @@ export default class CitySearch {
 
         res.results.forEach(item => {
             if (item.components._category !== 'place') return;
-            
+
             const element = document.createElement('li');
             element.classList.add('dropdown-list__item');
             element.setAttribute('data-lat', item.geometry.lat);
@@ -50,10 +49,10 @@ export default class CitySearch {
 
             const city = this.getCityValue(item.components);
             const country = item.components.country;
-            const itemValue = this.weatherDeterminationQuery.getCityAndCountryValue(city, country);
+            const cityAndCountryValue = this.weatherDeterminationQuery.getCityAndCountryValue(city, country);
 
-            element.textContent = itemValue;
-            element.setAttribute('data-value', itemValue);
+            element.textContent = cityAndCountryValue;
+            element.setAttribute('data-value', cityAndCountryValue);
             element.setAttribute('data-city', city);
             element.setAttribute('data-country', country);
             element.setAttribute('title', item.formatted);
@@ -66,11 +65,11 @@ export default class CitySearch {
                 const lat = element.getAttribute('data-lat');
                 const lon = element.getAttribute('data-lon');
                 this.weatherDeterminationQuery.setCurrentLatAndLonInLocalStorage(lat, lon);
-                
+
                 this.weatherDeterminationQuery
                     .queryWeather(lat, lon)
                     .then(weatherResult => this.responseParseSetValue.responseParse({
-                        userLocation: { cityAndCountry },
+                        userLocation: { cityAndCountry, lat: Number(lat), lon: Number(lon) },
                         weatherJsonParsed: weatherResult
                     }));
             });
@@ -79,18 +78,8 @@ export default class CitySearch {
 
     // attempts get city
     getCityValue(value) {
-        let city = '';
-        if (typeof value.city !== 'undefined') {
-            city = value.city;
-        } else if (typeof value.town !== 'undefined') {
-            city = value.town;
-        } else if (typeof value.county !== 'undefined') {
-            city = value.county;
-        } else if (typeof value.state !== 'undefined') {
-            city = value.state;
-        }
-
-        return city;
+        const { city, town, county, state } = value;
+        return city || town || county || state || '';
     }
 
     removeCityResultList() {
