@@ -14,7 +14,7 @@ export default class SetTargetLanguage {
 
         this.currentCityAndCountry = document.querySelector('.city__name');
         this.cityChange = document.querySelector('.footer .city__change');
-
+        
         this.weatherDetails = document.querySelector('.details');
         this.weatherDetailsTitle = this.weatherDetails.querySelector('.menu__title');
         this.weatherDetailsCloudy = this.weatherDetails.querySelector('.cloudy__title');

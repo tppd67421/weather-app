@@ -5,22 +5,41 @@
         width: 100%;
         box-sizing: border-box;
     }
+    &__loader {
+        width: 20px;
+        height: 20px;
+        background: blue;
+        opacity: 0;
+        transition: 300ms;
+        animation: rotate 1s infinite linear;
+        &.active {
+            opacity: 1;
+        }
+    }
     &__add {
         width: 30px;
         background-color: red;
         cursor: pointer;
     }
-    &__dropdown-list {
+    .dropdown-list {
         position: absolute;
-        display: none;
         background-color: #fff;
         z-index: 3;
         top: 20px;
         &.active {
             display: block;
         }
-        li {
+        &__item {
             cursor: pointer;
+            &.active {
+                background: orange;
+            }
         }
     }
+}
+
+@keyframes rotate {
+    from {transform: rotate(0deg);}
+    50% {transform: rotate(180deg);}
+    to {transform: rotate(360deg);}
 }

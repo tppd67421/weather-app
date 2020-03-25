@@ -8,6 +8,7 @@ export default {
     weatherDetailsHumidity: 'Влажность',
     weatherDetailsWind: 'Ветер',
 
+    searchLocationFindNothing: 'Ничего не найдено',
     weatherTemperature: 'Температура',
     daysTemperature: 'По дням',
     hoursTemperature: 'По часам',

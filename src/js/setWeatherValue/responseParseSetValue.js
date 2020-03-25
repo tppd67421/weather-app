@@ -70,6 +70,8 @@ export default class ResponseParseSetValue {
     }
 
     dailyParseSetData(data) {
+        this.dayTemperature.querySelectorAll('.day__item').forEach(item => item.remove());
+
         data.forEach(item => {
             if (new Date().getTime() < item.time * 1000) {
                 const daysTemperatureContent =
@@ -95,6 +97,8 @@ export default class ResponseParseSetValue {
     }
 
     hourlyParseSetData(data) {
+        this.hoursTemperature.querySelectorAll('.hours__item').forEach(item => item.remove());
+
         data.reduce((acc, item) => {
             const targetDate = new Date(item.time * 1000).getHours();
             if ((new Date().getTime() < item.time * 1000) && acc < 24) {
@@ -119,7 +123,7 @@ export default class ResponseParseSetValue {
             } else {
                 return acc;
             }
-        }, 0)
+        }, 0);
     }
 
     bgParseSetData(data) {

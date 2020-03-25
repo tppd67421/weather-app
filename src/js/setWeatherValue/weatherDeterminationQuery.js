@@ -44,36 +44,40 @@ export default class WeatherDeterminationQuery {
     async getUserLocation(value) {
         try {
             const currentLanguage = this.browserLocalStorage.getItem(constants.USER_LANGUAGE);
-
+            
             const getUserInfo = await fetch(`https://api.opencagedata.com/geocode/v1/json?key=fbc7e3dd63424abaae8705672d4d729d&q=${value}&language=${currentLanguage}`);
             const getUserInfoJson = await getUserInfo.json();
 
-            const citySearch = new CitySearch();
-            const cityValue = citySearch.getCityValue(getUserInfoJson.results[0].components);
-            const countryValue = getUserInfoJson.results[0].components.country;
+            if (getUserInfoJson.results.length) {
+                const citySearch = new CitySearch();
+                const cityValue = citySearch.getCityValue(getUserInfoJson.results[0].components);
+                const countryValue = getUserInfoJson.results[0].components.country;
 
-            let currentLocation = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
+                let currentLocation = JSON.parse(this.browserLocalStorage.getItem(constants.CURRENT_CITY));
 
-            if (currentLocation === null) {
-                currentLocation = { [currentLanguage]: this.getCityAndCountryValue(cityValue, countryValue) };
-            } else if (typeof Object.keys(currentLocation).filter(item => item === currentLanguage)[0] === 'undefined') {
-                // if we don't have target language in local storage...
-                currentLocation[currentLanguage] = this.getCityAndCountryValue(cityValue, countryValue);
+                if (currentLocation === null) {
+                    currentLocation = { [currentLanguage]: this.getCityAndCountryValue(cityValue, countryValue) };
+                } else if (typeof Object.keys(currentLocation).filter(item => item === currentLanguage)[0] === 'undefined') {
+                    // if we don't have target language in local storage...
+                    currentLocation[currentLanguage] = this.getCityAndCountryValue(cityValue, countryValue);
+                }
+
+                this.browserLocalStorage.setItem(constants.CURRENT_CITY, JSON.stringify(currentLocation));
+
+                const lat = getUserInfoJson.results[0].geometry.lat;
+                const lon = getUserInfoJson.results[0].geometry.lng;
+
+                this.setCurrentLatAndLonInLocalStorage(lat, lon);
+
+                return {
+                    lat: lat,
+                    lon: lon,
+                    cityAndCountry: this.getCityAndCountryValue(cityValue, countryValue),
+                    responseResult: getUserInfoJson
+                };
+            } else {
+                return null;
             }
-
-            this.browserLocalStorage.setItem(constants.CURRENT_CITY, JSON.stringify(currentLocation));
-
-            const lat = getUserInfoJson.results[0].geometry.lat;
-            const lon = getUserInfoJson.results[0].geometry.lng;
-
-            this.setCurrentLatAndLonInLocalStorage(lat, lon);
-
-            return {
-                lat: lat,
-                lon: lon,
-                cityAndCountry: this.getCityAndCountryValue(cityValue, countryValue),
-                responseResult: getUserInfoJson
-            };
         } catch (error) {
             this.queryError(error);
         }

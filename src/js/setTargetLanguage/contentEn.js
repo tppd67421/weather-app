@@ -8,6 +8,7 @@ export default {
     weatherDetailsHumidity: 'Humidity',
     weatherDetailsWind: 'Wind',
 
+    searchLocationFindNothing: 'Find nothing',
     weatherTemperature: 'Temperature',
     daysTemperature: 'Days',
     hoursTemperature: 'Hours',
